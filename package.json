@@ -1,0 +1,23 @@
+{
+  "name": "forms-server",
+  "version": "1.0.0",
+  "description": "a https server to serve all my forms endpoint",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "https",
+    "form"
+  ],
+  "author": "ddmasterdon",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-rate-limit": "^6.7.0",
+    "helmet": "^6.0.1"
+  }
+}
