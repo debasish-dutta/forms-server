@@ -4,7 +4,7 @@
   "description": "a https server to serve all my forms endpoint",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "",
     "start": "node server.js"
   },
   "keywords": [
