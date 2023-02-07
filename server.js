@@ -7,6 +7,8 @@ const bp = require('body-parser')
 const app = express();
 app.use(cors());
 
+require('dotenv').config();
+
 // server port configuration
 const PORT = process.env.PORT || 3001;
 
@@ -38,12 +40,9 @@ function saveData(data) {
                 messages =  JSON.parse(messagesjson);
             }
             
-            console.log(messages)
-            console.log(typeof data)
 
             messages.push(data);
             messagesjson = JSON.stringify(messages);
-            console.log(messagesjson);
             fs.writeFile("messages.json",messagesjson, (err) => {
                 if (err) throw err;
             });
@@ -60,12 +59,21 @@ function saveData(data) {
     
 }
 
+function Auth(req, res, next) {
+    const auth = req.headers.authorization;
+    if (auth === process.env.AUTH_KEY) {
+      next();
+    } else {
+      res.status(401);
+      res.send('Access forbidden');
+    }
+}
+
 // create a route for the app
 app.get('/', (req, res) => {
     res.send("API routes only!!")
 });
 app.post( '/contact', ( req, res ) => {
-    console.log(req.body)
     var timestamp = new Date().getTime();
 
     data = req.body
@@ -74,6 +82,27 @@ app.post( '/contact', ( req, res ) => {
     saveData(data);
 
     res.redirect( 200, 'thank-you' )
+});
+app.get('/getMessages', Auth , (req, res) => {
+    data = req.body;
+    
+    fs.readFile('messages.json', 'utf8', (err, data) => {
+        if (err) {
+            if (err.code === 'ENOENT') {
+                console.error('file does not exist');
+            }
+
+            throw err;
+        }
+
+    
+    return res.status(200).send(data);
+
+    });   
+})
+app.get('/downloadJSON', Auth, function(req, res){
+    const file = `messages.json`;
+    res.download(file);
 });
 
 app.use( ( req, res ) => {
